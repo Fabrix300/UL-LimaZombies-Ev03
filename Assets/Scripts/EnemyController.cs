@@ -1,25 +1,35 @@
-
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
     public Transform followAt;
     public float distanceToFollow;
-    public EnemySO data; 
+    public EnemySO data;
+    public Animator mAnimator;
 
-    private NavMeshAgent mNavMeshAgent;
-    private Animator mAnimator;
+    /** variables para gestion de vida **/
+    public Slider healthSlider;
+    private int healthPoints;
+    private int maxHealthPoints;
+    /*****************************/
+
+    private NavMeshAgent mNavMeshAgent;    
 
     private void Awake()
     {
         mNavMeshAgent = GetComponent<NavMeshAgent>();
-        mAnimator = transform.Find("Mutant").GetComponent<Animator>();
     }
 
     private void Start()
     {
         mNavMeshAgent.speed = data.speed;
+        healthPoints = (int) data.health;
+        maxHealthPoints = healthPoints;
+        healthSlider.maxValue = maxHealthPoints;
+        healthSlider.value = healthPoints;
+        followAt = GameObject.Find("Player").transform;
     }
 
     private void Update()
@@ -38,5 +48,17 @@ public class EnemyController : MonoBehaviour
             mNavMeshAgent.isStopped = true;
         }
 
+    }
+
+    public bool DamageEnemy(int damagePoints)
+    {
+        healthPoints -= damagePoints;
+        healthSlider.value = healthPoints;
+        if (healthPoints <= 0)
+        {
+            Destroy(gameObject);
+            return true;
+        }
+        return false;
     }
 }

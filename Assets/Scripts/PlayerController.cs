@@ -1,7 +1,7 @@
-
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,7 +10,12 @@ public class PlayerController : MonoBehaviour
     public float fireRange = 5f;
     public float rotationYSensitivity;
     public float rotationXSensitivity;
+
+    /* New */
     public GameObject explosion;
+    public ParticleSystem muzzleEffect;
+    public Text pointsText;
+    public int points;
 
     private PlayerInputAction mInputAction;
     private InputAction mMovementAction;
@@ -22,6 +27,7 @@ public class PlayerController : MonoBehaviour
     private bool jumpPressed = false;
     private bool onGround = true;
 
+    private GameVariables gameVariables;
 
     private void Awake()
     {
@@ -29,8 +35,12 @@ public class PlayerController : MonoBehaviour
         mRigidbody = GetComponent<Rigidbody>();
         mFirePoint = transform.Find("FirePoint");
         mCameraTransform = transform.Find("Main Camera");
+        pointsText.text = "Puntos: " + points;
 
         Cursor.lockState = CursorLockMode.Locked;
+        gameVariables = GameVariables.instance;
+        rotationYSensitivity = gameVariables.rotationYSensitivity;
+        rotationXSensitivity = gameVariables.rotationXSensitivity;
     }
 
     private void OnEnable()
@@ -50,9 +60,11 @@ public class PlayerController : MonoBehaviour
 
     }
 
-
     private void DoFire(InputAction.CallbackContext obj)
     {
+        // Efecto de disparo
+        muzzleEffect.Play();
+
         // Lanzar un raycast
         RaycastHit hit;
 
@@ -63,11 +75,38 @@ public class PlayerController : MonoBehaviour
             fireRange
         ))
         {
-            // Hubo una colision
-            Debug.Log(hit.collider.name);
-            GameObject nuevaExplosion = 
-                Instantiate(explosion, hit.point, transform.rotation);
+            // Hubo una colision //Debug.Log(hit.collider.name);
+            GameObject nuevaExplosion = Instantiate(explosion, hit.point, transform.rotation);
             Destroy(nuevaExplosion, 1f);
+            EnemyController enemyShooted = hit.collider.gameObject.GetComponent<EnemyController>();
+            if (enemyShooted)
+            {
+                switch (enemyShooted.data.enemyName) 
+                {
+                    case "EnemyBig":
+                        {
+                            bool isDead = enemyShooted.DamageEnemy(5);
+                            if (isDead)
+                            {
+                                // sumar 10 puntos y actualizar texto
+                                points += 10;
+                                pointsText.text = "Puntos: " + points; 
+                            }
+                            break;
+                        }
+                    case "EnemySmall":
+                        {
+                            bool isDead = enemyShooted.DamageEnemy(10);
+                            if (isDead)
+                            {
+                                // sumar 5 puntos y actualizar texto
+                                points += 5;
+                                pointsText.text = "Puntos: " + points;
+                            }
+                            break;
+                        }
+                }
+            }
         }
 
         Debug.DrawRay(mFirePoint.position,
@@ -135,7 +174,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("collision");
+        //Debug.Log("collision");
         onGround = true;
         jumpPressed = false;
     }
