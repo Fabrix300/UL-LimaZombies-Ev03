@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     private bool jumpPressed = false;
     private bool onGround = true;
 
-    private GameVariables gameVariables;
+    private GameManager gameManager;
 
     private void Awake()
     {
@@ -38,9 +38,9 @@ public class PlayerController : MonoBehaviour
         pointsText.text = "Puntos: " + points;
 
         Cursor.lockState = CursorLockMode.Locked;
-        gameVariables = GameVariables.instance;
-        rotationYSensitivity = gameVariables.rotationYSensitivity;
-        rotationXSensitivity = gameVariables.rotationXSensitivity;
+        gameManager = GameManager.instance;
+        rotationYSensitivity = gameManager.rotationYSensitivity;
+        rotationXSensitivity = gameManager.rotationXSensitivity;
     }
 
     private void OnEnable()

@@ -15,13 +15,13 @@ public class EnemySpawner : MonoBehaviour
 
     private int enemiesPerHorde;
 
-    private GameVariables gameVariables;
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameVariables = GameVariables.instance;
-        enemiesPerHorde = gameVariables.enemiesPerHorde;
+        gameManager = GameManager.instance;
+        //enemiesPerHorde = gameManager.enemiesPerHorde;
         timeBetweenHordes = 60f;
         time = timeBetweenHordes;
         wave += 1;

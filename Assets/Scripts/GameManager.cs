@@ -4,17 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class GameVariables : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    public static GameVariables instance;
+    public static GameManager instance;
 
     public float rotationYSensitivity;
     public float rotationXSensitivity;
-    public int enemiesPerHorde;
-
-    private string rotationYSensitivityS = "";
-    private string rotationXSensitivityS = "";
-    private string enemiesPerHordeS = "";
 
     private void Awake()
     {
@@ -35,7 +30,17 @@ public class GameVariables : MonoBehaviour
         
     }
 
-    public void AssignSrting(InputField inpField)
+    public void AdjustRotationXSensitivity(float _rotationXSensitivity)
+    {
+        rotationXSensitivity = _rotationXSensitivity;
+    }
+
+    public void AdjustRotationYSensitivity(float _rotationYSensitivity)
+    {
+        rotationYSensitivity = _rotationYSensitivity;
+    }
+
+    /*public void AssignSrting(InputField inpField)
     {
         switch (inpField.name)
         {
@@ -55,11 +60,11 @@ public class GameVariables : MonoBehaviour
                     break;
                 }
         }
-    }
+    }*/
 
     public void StartGame()
     {
-        if (
+        /*if (
             rotationYSensitivityS != "" &&
             rotationXSensitivityS != "" &&
             enemiesPerHordeS != ""
@@ -68,7 +73,8 @@ public class GameVariables : MonoBehaviour
             rotationYSensitivity = float.Parse(rotationYSensitivityS);
             rotationXSensitivity = float.Parse(rotationXSensitivityS);
             enemiesPerHorde = int.Parse(enemiesPerHordeS);
-            SceneManager.LoadScene("GameScene");
-        }
+            
+        }*/
+        SceneManager.LoadScene("GameScene");
     }
 }
